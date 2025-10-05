@@ -5,10 +5,10 @@ import AppRoutes from "./routes/AppRoutes";
 
 const theme = createTheme({
   palette: {
-    mode: "dark", // "light" or "dark"
-    background: {
-      default: "#363636ff",
-    },
+    mode: "light", // "light" or "dark"
+    // background: {
+    //   default: "#363636ff",
+    // },
   },
 });
 

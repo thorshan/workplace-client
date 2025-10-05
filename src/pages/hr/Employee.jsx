@@ -37,7 +37,7 @@ const Employee = () => {
   // Fetch employees
   const fetchEmployees = async () => {
     try {
-      const res = await employeeApi.getEmployee();
+      const res = await employeeApi.getEmployees();
       setEmployees(res.data);
     } catch (err) {
       console.error(err);
@@ -359,10 +359,11 @@ const Employee = () => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
+            <TableCell>Employee ID</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Phone</TableCell>
             <TableCell>Department</TableCell>
-            <TableCell>Employee ID</TableCell>
+            <TableCell>Address</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -370,13 +371,14 @@ const Employee = () => {
           {employees.map((emp) => (
             <TableRow key={emp._id}>
               <TableCell>{emp.name}</TableCell>
+              <TableCell>{emp.employeeID}</TableCell>
               <TableCell>{emp.email}</TableCell>
               <TableCell>{emp.phNumber}</TableCell>
               <TableCell>
                 {emp.department?.name ||
                   departments.find((d) => d._id === emp.department)?.name}
               </TableCell>
-              <TableCell>{emp.employeeID}</TableCell>
+              <TableCell>{emp.address}</TableCell>
               <TableCell>
                 <Button
                   variant="outlined"

@@ -9,7 +9,8 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import HrDashboard from "../pages/hr/Dashboard";
 import Users from "../pages/user/Users";
 import Employee from "../pages/hr/Employee";
-import Attendance from "../pages/hr/Attendance";
+import AttendanceSheet from "../pages/hr/AttendanceSheet";
+import AttendanceSheetDetail from "../pages/hr/AttendanceSheetDetail";
 import Review from "../pages/hr/Review";
 import Leaves from "../pages/hr/Leaves";
 
@@ -76,10 +77,18 @@ const AppRoutes = () => (
         }
       />
       <Route
-        path="hr/attendance"
+        path="hr/attendance-sheets"
         element={
           <ProtectedRoute roles={[ROLES.ADMIN, ROLES.HR]}>
-            <Attendance />
+            <AttendanceSheet />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="hr/attendance-sheets/:id"
+        element={
+          <ProtectedRoute roles={[ROLES.ADMIN, ROLES.HR]}>
+            <AttendanceSheetDetail />
           </ProtectedRoute>
         }
       />

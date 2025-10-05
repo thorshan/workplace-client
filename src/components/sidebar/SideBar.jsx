@@ -21,7 +21,6 @@ import {
   Logout as LogoutIcon,
   People as PeopleIcon,
   Apartment as ApartmentIcon,
-  Security as SecurityIcon,
   Work as WorkIcon,
   AccountBalance as AccountBalanceIcon,
   Storefront as StorefrontIcon,
@@ -51,7 +50,7 @@ const SideBar = ({ menuOpen }) => {
   const hrLinks = [
     { text: "Dashboard", path: "/hr" },
     { text: "Employee Management", path: "/hr/manage" },
-    { text: "Attendance", path: "/hr/attendance" },
+    { text: "Attendance", path: "/hr/attendance-sheets" },
     { text: "Performance Review", path: "/hr/review" },
     { text: "Leaves & Holidays", path: "/hr/l&h" },
   ];
@@ -164,17 +163,6 @@ const SideBar = ({ menuOpen }) => {
                   <ApartmentIcon />
                 </ListItemIcon>
                 <ListItemText primary="Department Management" />
-              </ListItemButton>
-            </ListItem>
-          )}
-          {/* Admin-only Roles and Permissions */}
-          {user.role === ROLES.ADMIN && (
-            <ListItem disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton sx={{ borderRadius: 1 }}>
-                <ListItemIcon sx={{ minWidth: 36 }}>
-                  <SecurityIcon />
-                </ListItemIcon>
-                <ListItemText primary="Roles & Permissions" />
               </ListItemButton>
             </ListItem>
           )}
