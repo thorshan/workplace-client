@@ -14,7 +14,6 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-
 import apiClient from "../../api/apiClient";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +21,8 @@ const AttendanceSheet = () => {
   const [sheets, setSheets] = useState([]);
   const [open, setOpenDialog] = useState(false);
   const [date, setDate] = useState("");
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [selectedSheetId, setSelectedSheetId] = useState(null);
   const navigate = useNavigate();
 
   // Fetch Sheets
@@ -36,11 +37,25 @@ const AttendanceSheet = () => {
 
   // Create Sheet
   const handleCreateSheet = async () => {
-    console.log("Hello World");
     try {
       await apiClient.post("/attendance-sheets", { date });
       setOpenDialog(false);
       setDate("");
+      fetchSheets();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Delete Confirm Dialog
+  const confirmDelete = async (e) => {
+    try {
+      e.stopPropagation();
+      if (!selectedSheetId) return;
+
+      await apiClient.delete(`/attendance-sheets/${selectedSheetId}`);
+      setOpenConfirmDialog(false);
+      setSelectedSheetId(null);
       fetchSheets();
     } catch (error) {
       console.log(error);
@@ -53,12 +68,7 @@ const AttendanceSheet = () => {
 
   return (
     <Box p={3}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5">Attendance Sheets</Typography>
         <Button
           variant="contained"
@@ -95,10 +105,10 @@ const AttendanceSheet = () => {
                   color="error"
                   onClick={(e) => {
                     e.stopPropagation();
-                    apiClient
-                      .delete(`/attendance-sheets/${sheet._id}`)
-                      .then(fetchSheets);
+                    setSelectedSheetId(sheet._id); 
+                    setOpenConfirmDialog(true);
                   }}
+                  size="small"
                 >
                   Delete
                 </Button>
@@ -108,8 +118,24 @@ const AttendanceSheet = () => {
         </TableBody>
       </Table>
 
-      {/* Create Sheet Dailog */}
-      <Dialog open={open}>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)}>
+        <DialogTitle>
+          <Typography variant="h6">Confirm Delete</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this sheet?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenConfirmDialog(false)}>Cancel</Button>
+          <Button color="error" variant="contained" onClick={confirmDelete}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Create Sheet Dialog */}
+      <Dialog open={open} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Create New Attendance Sheet</DialogTitle>
         <DialogContent>
           <TextField
