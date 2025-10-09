@@ -51,8 +51,8 @@ const SideBar = ({ menuOpen }) => {
     { text: "Dashboard", path: "/hr" },
     { text: "Employee Management", path: "/hr/manage" },
     { text: "Attendance", path: "/hr/attendance-sheets" },
-    { text: "Performance Review", path: "/hr/review" },
-    { text: "Leaves & Holidays", path: "/hr/l&h" },
+    { text: "Leaves", path: "/hr/leaves" },
+    { text: "Holidays", path: "/hr/holidays" },
   ];
 
   const financeLinks = [
@@ -152,17 +152,6 @@ const SideBar = ({ menuOpen }) => {
                   <PeopleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Users Managment" />
-              </ListItemButton>
-            </ListItem>
-          )}
-          {/* Admin-only Department */}
-          {user.role === ROLES.ADMIN && (
-            <ListItem disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton sx={{ borderRadius: 1 }}>
-                <ListItemIcon sx={{ minWidth: 36 }}>
-                  <ApartmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Department Management" />
               </ListItemButton>
             </ListItem>
           )}

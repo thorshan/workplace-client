@@ -5,14 +5,20 @@ import ProtectedRoute from "../components/protected/ProtectedRoute";
 import Login from "../pages/auth/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 
+// Employee Section
+import EmpLogin from "../pages/employee/Login";
+import Home from "../pages/employee/Home";
+import Profile from "../pages/employee/Profile";
+import LeaveRequest from "../pages/employee/LeaveRequest";
+
 // HR Section
 import HrDashboard from "../pages/hr/Dashboard";
 import Users from "../pages/user/Users";
 import Employee from "../pages/hr/Employee";
 import AttendanceSheet from "../pages/hr/AttendanceSheet";
 import AttendanceSheetDetail from "../pages/hr/AttendanceSheetDetail";
-import Review from "../pages/hr/Review";
 import Leaves from "../pages/hr/Leaves";
+import Holidays from "../pages/hr/Holidays";
 
 // Finance Section
 import FinanceDashboard from "../pages/finance/Dashboard";
@@ -35,6 +41,12 @@ const AppRoutes = () => (
   <Routes>
     {/* Public Routes */}
     <Route path="/login" element={<Login />} />
+
+    {/* Employee Routes */}
+    <Route path="workplace/login" element={<EmpLogin />} />
+    <Route path="workplace/home" element={<Home />} />
+    <Route path="workplace/:id" element={<Profile />} />
+    <Route path="workplace/leaverequest" element={<LeaveRequest />} />
 
     {/* Protected Dashboard Layout */}
     <Route
@@ -93,18 +105,18 @@ const AppRoutes = () => (
         }
       />
       <Route
-        path="hr/review"
+        path="hr/leaves"
         element={
           <ProtectedRoute roles={[ROLES.ADMIN, ROLES.HR]}>
-            <Review />
+            <Leaves />
           </ProtectedRoute>
         }
       />
       <Route
-        path="hr/l&h"
+        path="hr/holidays"
         element={
           <ProtectedRoute roles={[ROLES.ADMIN, ROLES.HR]}>
-            <Leaves />
+            <Holidays />
           </ProtectedRoute>
         }
       />
