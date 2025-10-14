@@ -8,11 +8,20 @@ import {
   Divider,
   CardActions,
   Button,
+  Avatar,
+  Paper,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import employeeApiClient from "../../api/employeeApiClient";
+import { empLeaveApi } from "../../api/empLeaveApi";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
+  const [leaves, setLeaves] = useState([]);
 
   const navigate = useNavigate();
 
@@ -25,6 +34,8 @@ const Profile = () => {
       }
       const res = await employeeApiClient.post("/profile", { email });
       setProfile(res.data);
+      const empLeave = await empLeaveApi.getLeavesByEmployee(res.data._id);
+      setLeaves(empLeave);
     } catch (error) {
       console.error("Error fetching employee profile:", error);
     }
@@ -34,6 +45,7 @@ const Profile = () => {
   const logout = () => {
     localStorage.removeItem("empEmail");
     localStorage.removeItem("empToken");
+    navigate("/workplace/login");
     setProfile(null);
   };
 
@@ -54,6 +66,9 @@ const Profile = () => {
 
   return (
     <Box p={3}>
+      <Avatar alt="User" src={null} sx={{ width: 108, height: 108 }}>
+        {profile.name[0].toUpperCase()}
+      </Avatar>
       <Typography variant="h4" gutterBottom>
         My Profile
       </Typography>
@@ -66,14 +81,12 @@ const Profile = () => {
             <strong>Employee ID:</strong> {profile.employeeID || "N/A"}
           </Typography>
           <Typography>
-            <strong>Department:</strong> {profile.department?.name || "N/A"}
-          </Typography>
-          <Typography>
-            <strong>Position:</strong> {profile.position || "N/A"}
+            <strong>Department:</strong>{" "}
+            {profile.department ? profile.department.name : "N/A"}
           </Typography>
           <Typography>
             <strong>Joined Date:</strong>{" "}
-            {profile.joinedDate
+            {profile.employmentDate
               ? new Date(profile.employmentDate).toLocaleDateString()
               : "N/A"}
           </Typography>
@@ -84,6 +97,36 @@ const Profile = () => {
           </Button>
         </CardActions>
       </Card>
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h6" gutterBottom>
+        Leave History
+      </Typography>
+      <Paper>
+        {leaves && leaves.length > 0 ? (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Type</TableCell>
+                <TableCell>Start Date</TableCell>
+                <TableCell>End Date</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {leaves.map((leave) => (
+                <TableRow key={leave._id}>
+                  <TableCell>{leave.type}</TableCell>
+                  <TableCell>{leave.startDate}</TableCell>
+                  <TableCell>{leave.endDate}</TableCell>
+                  <TableCell>{leave.status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <Typography>No leave requests yet.</Typography>
+        )}
+      </Paper>
     </Box>
   );
 };

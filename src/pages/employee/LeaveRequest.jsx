@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,10 +10,12 @@ import {
   Alert,
 } from "@mui/material";
 import { empLeaveApi } from "../../api/empLeaveApi";
+import employeeApiClient from "../../api/employeeApiClient";
 
 const LeaveRequest = () => {
   const [formData, setFormData] = useState({
-    leaveType: "",
+    employee: "",
+    type: "",
     startDate: "",
     endDate: "",
     reason: "",
@@ -21,8 +23,33 @@ const LeaveRequest = () => {
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [employee, setEmployee] = useState(null);
 
   const leaveTypes = ["Annual", "Sick", "Casual", "Vacation", "Other"];
+
+  useEffect(() => {
+    const fetchEmployee = async () => {
+      try {
+        const email = localStorage.getItem("empEmail");
+        if (!email) {
+          setError("Faild to get data");
+          return;
+        }
+        const resEmp = await employeeApiClient.post("/profile", { email });
+        setEmployee(resEmp.data);
+        setFormData((prev) => ({
+          ...prev,
+          employee: resEmp.data._id || resEmp.data.name || email,
+        }));
+      } catch (err) {
+        console.error(err);
+        setError(
+          err.response?.data?.message || "Failed to fetch employee data"
+        );
+      }
+    };
+    fetchEmployee();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,11 +62,16 @@ const LeaveRequest = () => {
     setMessage("");
 
     try {
-      const res = await empLeaveApi.post("/leaves/create", formData);
+      const payload = {
+        ...formData,
+        employee: employee._id || employee?.name || "",
+      };
+      const res = await empLeaveApi.createLeave(payload);
       if (res.status === 201) {
         setMessage("Leave request submitted successfully!");
         setFormData({
-          leaveType: "",
+          ...formData,
+          type: "",
           startDate: "",
           endDate: "",
           reason: "",
@@ -72,10 +104,19 @@ const LeaveRequest = () => {
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
             <TextField
+              label="Employee"
+              name="employee"
+              InputLabelProps={{ shrink: true }}
+              value={employee?.name || ""}
+              required
+              disabled
+            />
+
+            <TextField
               select
               label="Leave Type"
-              name="leaveType"
-              value={formData.leaveType}
+              name="type"
+              value={formData.type}
               onChange={handleChange}
               required
             >

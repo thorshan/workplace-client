@@ -87,7 +87,7 @@ const Home = () => {
 
         <Button
           variant="contained"
-          size="large"
+          size="small"
           sx={{ mb: 2 }}
           onClick={() => navigate("/workplace/leaverequest")}
         >
@@ -96,7 +96,7 @@ const Home = () => {
 
         <Button
           variant="outlined"
-          size="large"
+          size="small"
           onClick={() => navigate("/workplace/profile")}
         >
           View Profile
